@@ -1,0 +1,4 @@
+CoolProp
+numpy
+matplotlib
+# Add the shared course library here if it is installable and required.

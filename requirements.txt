@@ -1,4 +1,5 @@
 CoolProp
 numpy
 matplotlib
+jupyterlab
 # Add the shared course library here if it is installable and required.

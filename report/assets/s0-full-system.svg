@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" viewBox="0 0 1300 920" role="img" aria-labelledby="title desc">
+<title id="title">Full proposed S0 baseline heat-pump system</title>
+<desc id="desc">The closed R1233zd(E) refrigerant loop follows states 1 to 2 through the compressor, 2 to 3 through the condenser, 3 to 4 through the expansion valve, and 4 to 1 through the evaporator. Separate sink water is heated from 120 to 130 Celsius at 10 bar, receiving 100 kilowatts. Source water cools from 35 to 30 Celsius at 3 bar. Fluid streams do not mix. Dashed arrows show heat or compressor shaft work.</desc>
+<defs>
+ <marker id="hot" markerWidth="16" markerHeight="16" refX="4" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L16 8 L0 16 L4 8 Z" fill="#d85a33"/></marker>
+ <marker id="cold" markerWidth="16" markerHeight="16" refX="4" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L16 8 L0 16 L4 8 Z" fill="#6b5bb8"/></marker>
+ <marker id="water" markerWidth="16" markerHeight="16" refX="4" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L16 8 L0 16 L4 8 Z" fill="#16869b"/></marker>
+ <marker id="energy" markerWidth="12" markerHeight="12" refX="3" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L12 6 L0 12 L3 6 Z" fill="#c38a14"/></marker>
+ <style>
+ text{font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',system-ui,sans-serif;fill:#1e293b;font-size:18px}
+ .title{font-size:31px;font-weight:700}.sub{font-size:18px;fill:#64748b}.label{font-size:21px;font-weight:650}.small{font-size:16px;fill:#64748b}.hotlabel{fill:#b64d2a}.coldlabel{fill:#6554aa}.waterlabel{fill:#11778b}
+ .pipe{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.hp{stroke:#d85a33}.lp{stroke:#6b5bb8}.water{stroke:#16869b}.heat{stroke:#c38a14;stroke-width:2.4;stroke-dasharray:7 5;fill:none}.state{fill:#fff;stroke:#475569;stroke-width:1.5}.num{font-size:17px;font-weight:700;text-anchor:middle;dominant-baseline:middle}
+ </style>
+</defs>
+<rect width="1300" height="920" fill="#fff"/>
+<text x="650" y="48" text-anchor="middle" class="title">S0 · Complete baseline heat-pump system</text>
+<text x="650" y="81" text-anchor="middle" class="sub">Three separate fluid circuits · nominal design conditions · state numbers match the report</text>
+
+<!-- Condenser: bounds 420,165 to 880,325. Evaporator: 420,615 to 880,775. -->
+<rect x="420" y="165" width="460" height="160" rx="20" fill="#fff8f3" stroke="#dfb8a6" stroke-width="1.6"/>
+<rect x="420" y="615" width="460" height="160" rx="20" fill="#f0fafb" stroke="#a7cdd2" stroke-width="1.6"/>
+
+<!-- Continuous refrigerant loop, clockwise. -->
+<path class="pipe hp" d="M280 380 L280 245 Q280 220 305 220 L403 220" marker-end="url(#hot)"/>
+<path class="pipe hp" d="M885 220 L975 220 Q1000 220 1000 245 L1000 393" marker-end="url(#hot)"/>
+<path class="pipe lp" d="M1000 505 L1000 645 Q1000 670 975 670 L897 670" marker-end="url(#cold)"/>
+<path class="pipe lp" d="M415 670 L305 670 Q280 670 280 645 L280 537" marker-end="url(#cold)"/>
+
+<!-- Condenser: opposite water/refrigerant flow; bridges indicate separate pipes. -->
+<path class="pipe hp" d="M425 220 L863 220" marker-end="url(#hot)"/>
+<path d="M1195 285 L1020 285 C1020 265 980 265 980 285 L437 285" fill="none" stroke="#fff" stroke-width="12"/>
+<path class="pipe water" d="M1195 285 L1020 285 C1020 265 980 265 980 285 L437 285" marker-end="url(#water)"/>
+<path d="M415 285 L300 285 C300 265 260 265 260 285 L107 285" fill="none" stroke="#fff" stroke-width="12"/>
+<path class="pipe water" d="M415 285 L300 285 C300 265 260 265 260 285 L107 285" marker-end="url(#water)"/>
+<path class="heat" d="M650 234 L650 264" marker-end="url(#energy)"/>
+<text x="650" y="145" text-anchor="middle" class="label">CONDENSER · useful heat = 100 kW</text>
+<text x="650" y="199" text-anchor="middle" class="small">Condensing level: 135°C</text>
+<text x="745" y="257" text-anchor="middle" class="small">Heat to water</text>
+<text x="1100" y="252" text-anchor="middle" class="waterlabel">Sink inlet · 120°C</text>
+<text x="235" y="252" text-anchor="middle" class="waterlabel">Sink outlet · 130°C</text>
+<text x="650" y="310" text-anchor="middle" class="small">Pressurized water · 10 bar · no mixing with refrigerant</text>
+
+<!-- Compressor: inlet below, discharge above. -->
+<circle cx="280" cy="450" r="65" fill="#fff8e8" stroke="#c99e43" stroke-width="2"/>
+<path d="M250 475 L280 420 L310 475 Z" fill="#f1d79c" stroke="#a97b23" stroke-width="1.5"/>
+<text x="175" y="360" text-anchor="middle" class="label">COMPRESSOR</text>
+<path class="heat" d="M90 450 L200 450" marker-end="url(#energy)"/>
+<text x="142" y="418" text-anchor="middle">Shaft work in</text>
+<text x="135" y="492" text-anchor="middle" class="small">Calculated by model</text>
+
+<!-- Central explanation belongs inside the refrigerant circuit, away from pipes. -->
+<rect x="430" y="392" width="440" height="150" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="650" y="429" text-anchor="middle" class="label">Closed refrigerant loop</text>
+<text x="650" y="465" text-anchor="middle">R1233zd(E)</text>
+<text x="650" y="497" text-anchor="middle" class="small">Same refrigerant mass flow in all components</text>
+<text x="650" y="524" text-anchor="middle" class="small">Compressor isentropic efficiency = 0.70</text>
+
+<!-- Expansion valve: inlet above, outlet below. -->
+<path d="M970 410 L1030 450 L970 490 Z" fill="#fff" stroke="#64748b" stroke-width="2"/>
+<path d="M1030 410 L970 450 L1030 490 Z" fill="#fff" stroke="#64748b" stroke-width="2"/>
+<text x="1122" y="420" text-anchor="middle" class="label">EXPANSION</text>
+<text x="1122" y="447" text-anchor="middle" class="label">VALVE</text>
+<text x="1122" y="479" text-anchor="middle" class="small">Pressure falls</text>
+<text x="1122" y="506" text-anchor="middle" class="small">Enthalpy unchanged</text>
+
+<!-- Evaporator: refrigerant leftward, source water rightward. -->
+<path class="pipe lp" d="M875 670 L437 670" marker-end="url(#cold)"/>
+<path class="pipe water" d="M90 735 L863 735" marker-end="url(#water)"/>
+<path class="pipe water" d="M885 735 L1178 735" marker-end="url(#water)"/>
+<path class="heat" d="M650 720 L650 692" marker-end="url(#energy)"/>
+<text x="650" y="595" text-anchor="middle" class="label">EVAPORATOR · heat recovered from waste water</text>
+<text x="650" y="649" text-anchor="middle" class="small">Evaporating level: 25°C</text>
+<text x="765" y="710" text-anchor="middle" class="small">Heat to refrigerant</text>
+<text x="230" y="702" text-anchor="middle" class="waterlabel">Source inlet · 35°C</text>
+<text x="1075" y="702" text-anchor="middle" class="waterlabel">Source outlet · 30°C</text>
+<text x="650" y="760" text-anchor="middle" class="small">Waste-heat water · 3 bar · no mixing with refrigerant</text>
+
+<!-- Four states use the baseline numbering in the report. -->
+<circle cx="280" cy="590" r="15" class="state"/><text x="280" y="591" class="num">1</text>
+<text x="143" y="569" text-anchor="middle" class="coldlabel">Vapour at 30°C</text>
+<text x="143" y="598" text-anchor="middle" class="small">5 K outlet superheat</text>
+<circle cx="345" cy="220" r="15" class="state"/><text x="345" y="221" class="num">2</text>
+<text x="270" y="190" text-anchor="middle" class="small">Discharge T: calculated</text>
+<circle cx="1000" cy="350" r="15" class="state"/><text x="1000" y="351" class="num">3</text>
+<text x="1120" y="346" text-anchor="middle" class="hotlabel">Liquid at 130°C</text>
+<text x="1120" y="375" text-anchor="middle" class="small">5 K subcooling</text>
+<circle cx="1000" cy="620" r="15" class="state"/><text x="1000" y="621" class="num">4</text>
+<text x="1120" y="592" text-anchor="middle" class="coldlabel">Liquid + vapour</text>
+<text x="1120" y="621" text-anchor="middle" class="small">After expansion</text>
+<text x="360" y="118" text-anchor="middle" class="small">High-pressure refrigerant ≈ 20.99 bar</text>
+
+<!-- Color key and whole-system energy balance. -->
+<rect x="45" y="810" width="1210" height="85" rx="16" fill="#f8fafc"/>
+<path class="pipe hp" d="M75 836 L115 836"/><text x="130" y="842" class="small">High-pressure refrigerant</text>
+<path class="pipe lp" d="M405 836 L445 836"/><text x="460" y="842" class="small">Low-pressure refrigerant ≈ 1.30 bar</text>
+<path class="pipe water" d="M815 836 L855 836"/><text x="870" y="842" class="small">Water flow</text>
+<path class="heat" d="M1050 836 L1090 836"/><text x="1105" y="842" class="small">Heat / work</text>
+<text x="650" y="875" text-anchor="middle">Heat delivered = heat recovered from the source + compressor work</text>
+</svg>

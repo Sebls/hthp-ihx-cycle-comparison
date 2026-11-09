@@ -8,24 +8,6 @@ This repository is a starting scaffold. Neither cycle is implemented yet, and
 Select the assigned advanced cycle and obtain the operating conditions and
 shared course library before implementing the model.
 
-## Repository structure
-
-```text
-project/
-├── main.ipynb
-├── report/
-│   ├── report.tex
-│   ├── report.pdf
-│   └── figures/
-├── requirements.txt
-├── README.md
-└── .gitignore
-```
-
-All model code, performance calculations, parametric analyses, and figure
-generation belong in `main.ipynb`. Store generated plots and cycle diagrams in
-`report/figures/`. Keep the final report within 10 pages.
-
 ## Installation
 
 Use Python 3.10 or newer. From this repository directory:
@@ -73,5 +55,5 @@ the report PDF and generated figures can be committed.
 
 This directory is an independent Git repository nested in `energy-systems`.
 Run Git commands from here (or use `git -C project` from the parent directory).
-The `origin` remote is https://github.com/Sebls/hthp-ihx-cycle-comparison.git;
+The `origin` remote is <https://github.com/Sebls/hthp-ihx-cycle-comparison.git>;
 `main` tracks `origin/main`.

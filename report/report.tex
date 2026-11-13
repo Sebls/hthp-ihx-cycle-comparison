@@ -25,159 +25,117 @@
 \date{\today}
 
 \begin{document}
-
 \maketitle
 
-
 \begin{abstract}
-% [Abstract / Executive Summary placeholder]
+% To be completed.
 \end{abstract}
 
 \section{Introduction and Context}
-% [Introduce the case study: waste-heat source (35 °C to 30 °C), hot-water sink (120 °C to 130 °C, 100 kW), large temperature lift, and comparison of baseline S0 vs. internal heat exchanger cycle S4]
+% To be completed.
 
 \section{Common Specifications and Modelling Assumptions}
 \label{sec:assumptions}
+The heat pump supplies $100\,\mathrm{kW}$ to water heated from 120 to
+$130\,{}^\circ\mathrm{C}$ at $10\,\mathrm{bar}$, using source water cooled
+from 35 to $30\,{}^\circ\mathrm{C}$ at $3\,\mathrm{bar}$.
+R1233zd(E) is the reference refrigerant; R245fa and R600 are compared under
+the same external conditions~\cite{assignment}. The water pressures are
+boundary conditions, distinct from refrigerant pressures.
 
-The reference problem supplies $100\,\mathrm{kW}$ to water heated from
-$120$ to $130\,{}^\circ\mathrm{C}$ at $10\,\mathrm{bar}$, using source water
-cooled from $35$ to $30\,{}^\circ\mathrm{C}$ at $3\,\mathrm{bar}$.
-R1233zd(E) is the reference refrigerant; R245fa and R600 are evaluated at the
-same external conditions. These water pressures are boundary conditions,
-not the refrigerant suction and discharge pressures.
-
-The nominal compressor isentropic efficiency is $0.70$. Condenser-outlet
+Nominal compressor isentropic efficiency is 0.70. Condenser-outlet
 subcooling, S0 evaporator-outlet superheat and S4 compressor-inlet superheat
-are each $5\,\mathrm{K}$. S4 additionally imposes an evaporator-outlet vapour
-quality of $0.90$. The refrigerant and water film coefficients are both
-$3000\,\mathrm{W\,m^{-2}\,K^{-1}}$, with equal hot- and cold-side areas.
-The saturation temperatures are prescribed through a common offset
-$\Delta T_p=5\,\mathrm{K}$:
+are each $5\,\mathrm{K}$; S4 evaporator-outlet vapour quality is 0.90.
+A common saturation offset $\Delta T_p=5\,\mathrm{K}$ sets
 \begin{equation}
  T_c=T_{\mathrm{sink,out}}+\Delta T_p=135\,{}^\circ\mathrm{C},\qquad
  T_e=T_{\mathrm{source,out}}-\Delta T_p=25\,{}^\circ\mathrm{C}.
  \label{eq:saturation}
 \end{equation}
-CoolProp determines each refrigerant's saturation pressures from these
-temperatures. Thus pressure ratio is an output, not an independent input.
+CoolProp gives the corresponding saturation pressures; pressure ratio is
+therefore an output. Both cycles are steady-state, neglect pressure losses
+and use isenthalpic expansion. Reported input is compressor shaft power,
+excluding motor, water-pump and auxiliary consumption. Each operating point
+sizes fresh exchangers rather than simulating an installed machine.
 
-The systems are steady-state, neglect pressure losses, and use an isenthalpic
-valve. Compressor input is shaft power; electrical motor, water-pump and
-auxiliary consumption are excluded. Each point sizes new exchangers rather
-than simulating a fixed installation at another load. No compressor map,
-volumetric efficiency, equipment temperature limit or cost model is included.
-
-\paragraph{Heat-exchanger model and area convention.}
-The original Caldis \texttt{SizingHX} components are retained. Each exchanger
-uses balances based on the inlet/outlet enthalpies and one counterflow
-log-mean temperature difference (LMTD) for its entire length:
+\paragraph{Exchanger sizing.}
+The original Caldis \texttt{SizingHX} components use inlet/outlet enthalpy
+balances and one counterflow log-mean temperature difference (LMTD):
 \begin{equation}
- \Delta T_{\mathrm{lm}}=\frac{\Delta T_1-\Delta T_2}
- {\ln(\Delta T_1/\Delta T_2)},\qquad
- A_{\mathrm{hot}}=\frac{|\dot Q|}{U_{\mathrm{hot}}\Delta T_{\mathrm{lm}}},\qquad
- U_{\mathrm{hot}}=\left(\frac{1}{h_{\mathrm{hot}}}
-                   +\frac{1}{h_{\mathrm{cold}}}\right)^{-1}.
+ \Delta T_{\mathrm{lm}}=\frac{\Delta T_1-\Delta T_2}{\ln(\Delta T_1/\Delta T_2)},
+ \qquad A_{\mathrm{hot}}=\frac{|\dot Q|}{U\Delta T_{\mathrm{lm}}},\qquad
+ U=\left(\frac{1}{h_{\mathrm{hot}}}+\frac{1}{h_{\mathrm{cold}}}\right)^{-1}.
  \label{eq:sizing}
 \end{equation}
 Here $\Delta T_1=T_{h,\mathrm{in}}-T_{c,\mathrm{out}}$ and
-$\Delta T_2=T_{h,\mathrm{out}}-T_{c,\mathrm{in}}$.
-For equal film coefficients the nominal $U_{\mathrm{hot}}$ is
-$1500\,\mathrm{W\,m^{-2}\,K^{-1}}$, not $3000$.
-Wall resistance and fouling are absent. The reported total is
-$A_\Sigma=A_{\mathrm{cond,hot}}+A_{\mathrm{evap,hot}}+A_{\mathrm{IHX,hot}}$;
-it is not the sum of both physical sides of every exchanger.
+$\Delta T_2=T_{h,\mathrm{out}}-T_{c,\mathrm{in}}$. Equal hot/cold areas and
+film coefficients of $3000\,\mathrm{W\,m^{-2}\,K^{-1}}$ give nominal
+$U=1500\,\mathrm{W\,m^{-2}\,K^{-1}}$; wall and fouling resistances are
+neglected. Total area is
+$A_\Sigma=A_{\mathrm{cond,hot}}+A_{\mathrm{evap,hot}}+A_{\mathrm{IHX,hot}}$,
+one reference side per exchanger. The single-zone approximation does not
+resolve phase-change temperature profiles. The offset in
+Eq.~\eqref{eq:saturation} is not an enforced local pinch; areas are
+comparative sizing indicators, not validated equipment dimensions.
 
-This is a single-zone sizing approximation across liquid, two-phase and
-vapour regions. Positive terminal approaches do not establish that the
-local temperature difference stays positive everywhere inside a phase-changing
-exchanger. The input called \emph{pinch} in the scripts is the saturation
-offset in Eq.~\eqref{eq:saturation}; it is not an enforced local pinch along
-each exchanger. Consequently, area comparisons are model-based sizing
-indicators, not validated equipment dimensions or capital costs.
-
+\clearpage
 \section{Cycle Descriptions and Modelling}
 \label{sec:model}
-
 \subsection{Baseline Cycle (S0)}
-The refrigerant passes through compressor, condenser, valve and evaporator,
-then returns to the compressor. Define states 1, 2 and 3 as compressor inlet,
-compressor outlet and condenser outlet. The compressor model gives
+S0 connects a compressor, condenser, valve and evaporator. States 1, 2 and
+3 denote compressor inlet, compressor outlet and condenser outlet.
+With $T_1=T_e+\Delta T_{\mathrm{sh},0}$ and
+$T_3=T_c-\Delta T_{\mathrm{sc}}$, the compressor model is
 \begin{equation}
- h_{2s}=h(p_c,s_1),\qquad
- h_2=h_1+\frac{h_{2s}-h_1}{\eta_{\mathrm{is}}}.
+ h_{2s}=h(p_c,s_1),\qquad h_2=h_1+\frac{h_{2s}-h_1}{\eta_{\mathrm{is}}}.
  \label{eq:compressor}
 \end{equation}
-The closures are $T_1=T_e+\Delta T_{\mathrm{sh},0}$ and
-$T_3=T_c-\Delta T_{\mathrm{sc}}$. The condenser duty sets the refrigerant flow:
+The heating duty fixes refrigerant flow and shaft input:
 \begin{equation}
  \dot m_r=\frac{\dot Q_c}{h_2-h_3},\qquad
  \dot W=\dot m_r(h_2-h_1),\qquad
- \mathrm{COP}_H=\frac{\dot Q_c}{\dot W}
-              =\frac{h_2-h_3}{h_2-h_1}.
+ \mathrm{COP}_H=\frac{\dot Q_c}{\dot W}=\frac{h_2-h_3}{h_2-h_1}.
  \label{eq:cop}
 \end{equation}
-The valve preserves enthalpy, and water flow rates follow their corresponding
-enthalpy changes and heat duties. There is no independent prescribed
-refrigerant mass flow.
+The valve preserves enthalpy; water flow rates follow the respective heat
+duties and water enthalpy changes.
 
 \subsection{Internal Heat Exchanger Cycle (S4)}
-S4 inserts an IHX between the condenser outlet and valve inlet on the
-high-pressure side, and between the evaporator outlet and compressor inlet
-on the low-pressure side. Let $h_{e,o}$ be the evaporator-outlet enthalpy and
-$h_{v,i}$ the valve-inlet enthalpy. The two additional closures are
-\begin{equation}
- h_{e,o}=h(p_e,x_e),\qquad T_1=T_e+\Delta T_{\mathrm{suc}}.
-\end{equation}
-Quality $x_e$ is the vapour mass fraction of the evaporator-outlet mixture,
-not IHX effectiveness. At $x_e=0.90$, ten percent of its mass remains liquid;
-the IHX must finish vaporisation and supply the imposed suction superheat.
-The IHX energy balance is
-\begin{equation}
- h_3-h_{v,i}=h_1-h_{e,o},\qquad
- \dot Q_{\mathrm{IHX}}=\dot m_r(h_1-h_{e,o}).
- \label{eq:ihx}
-\end{equation}
-Thus effectiveness and approach temperatures are consequences of the imposed
-states; they are not independently specified design controls.
-\begin{figure}[htbp]
- \centering
- \includegraphics[width=0.58\textwidth]{hp_s4.pdf}
- \caption{S4 topology used by the original model. The high-pressure liquid
- transfers heat to the low-pressure evaporator-outlet stream before compression.}
+The IHX transfers heat from condenser-outlet liquid to the evaporator-outlet
+stream before compression (Figure~\ref{fig:topology}). With evaporator-outlet
+enthalpy $h_{e,o}$ and valve-inlet enthalpy $h_{v,i}$, the closures and balance are
+\begin{align}
+ h_{e,o}&=h(p_e,x_e),\qquad T_1=T_e+\Delta T_{\mathrm{suc}},\\
+ h_3-h_{v,i}&=h_1-h_{e,o},\qquad
+ \dot Q_{\mathrm{IHX}}=\dot m_r(h_1-h_{e,o}). \label{eq:ihx}
+\end{align}
+Quality $x_e$ is vapour mass fraction, not IHX effectiveness. At 0.90,
+10\% of the evaporator-outlet mass remains liquid; the IHX completes
+vaporisation and supplies suction superheat. Effectiveness and approach
+temperatures follow from these imposed states rather than independent controls.
+\begin{figure}[H]
+ \centering\includegraphics[width=0.58\textwidth]{hp_s4.pdf}
+ \caption{S4 topology: the liquid line heats the low-pressure stream before compression.}
  \label{fig:topology}
 \end{figure}
 
-\paragraph{Why an IHX need not improve COP in this model.}
-At equal pressures and equal compressor-inlet superheat, S0 and S4 have the
-same $h_1$, $h_2$ and condenser-outlet $h_3$. Equation~\eqref{eq:cop} then gives
-identical flow, work and COP. Altering $x_e$ changes $h_{e,o}$ and $h_{v,i}$,
-but neither appears in Eq.~\eqref{eq:cop}. Moreover,
-\begin{equation}
- h_{e,o}-h_{v,i}=h_1-h_3,
-\end{equation}
-so the external evaporator duty also stays fixed. This algebra explains
-several apparently flat or overlapping curves; it is a property of the
-chosen closures, not evidence that IHXs are generally ineffective.
+At equal pressures and compressor-inlet superheat, S0 and S4 have the same
+$h_1$, $h_2$ and $h_3$, hence identical mass flow, work and COP by
+Eq.~\eqref{eq:cop}. The IHX balance also gives
+$h_{e,o}-h_{v,i}=h_1-h_3$, so external evaporator duty is unchanged.
+Changing quality redistributes internal heat without changing these energy
+metrics. This is a consequence of the selected closures, not a general
+claim that an IHX cannot improve performance.
 
-\section{Results and Comparison}
+\clearpage
+\section{Nominal Results and Energy/Exergy Comparison}
 \label{sec:results}
+Table~\ref{tab:nominal} compares nominal S0/S4 for R1233zd(E) with the
+separate sampled S4 selection described in Section~\ref{sec:grid}.
+At fixed duty, shaft input is $100/\mathrm{COP}_H$ in kW; COP and power
+therefore express the same energy-performance result.
 
-\subsection{Meaning of the Reported Quantities}
-COP measures useful heat per unit shaft input; a higher COP means less shaft
-power for the same heating duty. At fixed $100\,\mathrm{kW}$,
-$\dot W=100/\mathrm{COP}_H$ in kW, so these are two descriptions of the same
-energy-performance result. Discharge temperature describes the thermal
-condition leaving the compressor, whereas pressure ratio $p_c/p_e$ describes
-the imposed pressure lift. Neither is by itself a complete compressor
-selection criterion. Areas measure the exchanger conductance required under
-Eq.~\eqref{eq:sizing}. A smaller area is not automatically a better cycle:
-it can accompany a larger driving temperature difference, lower recovered
-source heat, or greater shaft input.
-
-The main reference values for R1233zd(E) are in Table~\ref{tab:nominal}.
-The ``selected S4'' column is a separate sampled configuration discussed in
-Section~\ref{sec:grid}; it is not the nominal S4 cycle.
-\begin{table}[htbp]
+\begin{table}[H]
 \centering\small
 \caption{R1233zd(E): nominal comparison and best sampled S4 COP.}
 \label{tab:nominal}
@@ -185,7 +143,6 @@ Section~\ref{sec:grid}; it is not the nominal S4 cycle.
 \toprule
 Quantity & Nominal S0 & Nominal S4 & Selected S4\\
 \midrule
-Heating duty (kW) & 100.00 & 100.00 & 100.00\\
 Quality $x_e$ & --- & 0.90 & 1.00\\
 Suction superheat (K) & 5 & 5 & 20\\
 Heating COP & 1.754 & 1.754 & 1.858\\
@@ -193,132 +150,67 @@ Shaft input (kW) & 57.01 & 57.01 & 53.82\\
 Discharge temperature (${}^\circ$C) & 145.05 & 145.05 & 159.47\\
 Pressure ratio & 16.10 & 16.10 & 16.10\\
 Source heat uptake (kW) & 42.99 & 42.99 & 46.18\\
-Refrigerant flow (kg/s) & 0.787 & 0.787 & 0.689\\
 Condenser area (m$^2$) & 5.396 & 5.396 & 3.701\\
 Evaporator area (m$^2$) & 5.732 & 3.973 & 4.268\\
 IHX area (m$^2$) & 0 & 0.128 & 0.084\\
 Total area $A_\Sigma$ (m$^2$) & 11.128 & 9.497 & 8.053\\
-Internal IHX duty (kW) & 0 & 18.21 & 11.31\\
 Total exergy destruction (kW) & 32.95 & 32.95 & 29.84\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\subsection{Nominal Energy Performance and Exchanger Sizing}
-The nominal S0/S4 equality in COP, $57.01\,\mathrm{kW}$ shaft power and
-$145.05\,{}^\circ\mathrm{C}$ discharge temperature follows directly from the
-common compressor inlet and condenser outlet states. Both have a pressure
-ratio of 16.10 and recover $42.99\,\mathrm{kW}$ externally.
-The $18.21\,\mathrm{kW}$ transferred in the nominal IHX is internal heat
-recovery; it must not be added to the $100\,\mathrm{kW}$ useful heating duty.
-
-In S4 the evaporator outlet is at saturation rather than superheated, so its
-terminal-temperature pattern differs from S0 even though its duty is the
-same. Its predicted area falls from $5.732$ to $3.973\,\mathrm{m^2}$.
-Adding $0.128\,\mathrm{m^2}$ of IHX gives $9.497\,\mathrm{m^2}$ total,
-14.66\% below the baseline's $11.128\,\mathrm{m^2}$.
-This is an endpoint-LMTD sizing result, not a measured equipment reduction;
-phase-resolved sizing would be needed to confirm the magnitude.
+\subsection{Nominal Performance and Exchanger Areas}
+Both nominal cycles have COP 1.754, shaft input $57.01\,\mathrm{kW}$,
+discharge temperature $145.05\,{}^\circ\mathrm{C}$ and pressure ratio 16.10.
+The nominal IHX transfers $18.21\,\mathrm{kW}$ internally; this is not
+additional useful heating or external source recovery.
+S4 has a saturated evaporator outlet rather than a superheated one, changing
+the terminal-temperature pattern. Its evaporator area falls from 5.732 to
+$3.973\,\mathrm{m^2}$, despite equal external duty. Including the
+$0.128\,\mathrm{m^2}$ IHX gives total area $9.497\,\mathrm{m^2}$,
+14.66\% below S0. Phase-resolved sizing is needed to confirm this predicted
+reduction; smaller area alone does not establish better energy performance.
 
 \subsection{Energy and Exergy Balances}
-The whole-cycle first law is
-\begin{equation}
- \dot Q_c=\dot Q_e+\dot W,
-\end{equation}
-with no separate external IHX term. For the nominal reference,
-$100.00=42.99+57.01\,\mathrm{kW}$ after rounding.
-Physical stream exergy is calculated consistently for each fluid relative to
-$T_0=298.15\,\mathrm{K}$ and $p_0=101325\,\mathrm{Pa}$:
+The whole-cycle first law is $\dot Q_c=\dot Q_e+\dot W$, giving
+$100.00=42.99+57.01\,\mathrm{kW}$ at the nominal point. No external IHX
+term is added. Physical stream exergy uses $T_0=298.15\,\mathrm{K}$ and
+$p_0=101325\,\mathrm{Pa}$ consistently for each fluid:
 \begin{equation}
  e=(h-h_0)-T_0(s-s_0),\qquad
- \dot E_D=\dot W+\dot E_{\mathrm{source,drop}}
-                         -\dot E_{\mathrm{sink,gain}}.
+ \dot E_D=\dot W+\dot E_{\mathrm{source,drop}}-\dot E_{\mathrm{sink,gain}}.
+ \label{eq:exergy}
 \end{equation}
-Both water streams enter the external-exchanger exergy balances. Exergy
-destruction measures irreversibility, not missing energy; it is not an
-additional heat loss to subtract from the first law.
-
-Figure~\ref{fig:exergy} compares components. For R1233zd(E), S0 destroys
-$12.40\,\mathrm{kW}$ in the compressor, $17.62$ in the valve, $1.90$ in the
-condenser and $1.03$ in the evaporator. Nominal S4 reduces valve destruction
-to $13.13\,\mathrm{kW}$ but introduces $4.46\,\mathrm{kW}$ in the IHX and
-slightly changes the evaporator contribution to $1.05\,\mathrm{kW}$.
-Both totals are $32.95\,\mathrm{kW}$: the apparent valve benefit is offset
-elsewhere. The same equality of nominal S0/S4 totals occurs for R245fa
-($40.32\,\mathrm{kW}$) and R600 ($41.75\,\mathrm{kW}$).
-\begin{figure}[htbp]
+Both water streams enter the external-exchanger balances. Exergy destruction
+measures irreversibility rather than missing energy.
+Figure~\ref{fig:exergy} shows that S4 reduces reference-fluid valve destruction
+from 17.62 to $13.13\,\mathrm{kW}$ but introduces
+$4.46\,\mathrm{kW}$ in the IHX, with a small evaporator change.
+Total destruction remains $32.95\,\mathrm{kW}$ for both nominal cycles:
+the component benefit is offset elsewhere. Nominal S0/S4 totals are likewise
+equal for the other two fluids.
+\clearpage
+\begin{figure}[H]
  \centering\includegraphics[width=\textwidth]{exergy.pdf}
- \caption{Nominal component exergy destruction for each refrigerant and cycle.
- Compare both the stack height (total irreversibility) and its distribution;
- a smaller valve contribution alone does not imply a better whole cycle.}
+ \caption{Nominal component exergy destruction. S4 redistributes irreversibility
+ without reducing its total at matched compressor states.}
  \label{fig:exergy}
 \end{figure}
 
-\section{Parametric Studies and Optimization}
+\section{Parametric Studies and Sampled Design Selection}
 \label{sec:parametric}
+\subsection{Study Design and Refrigerant Comparison}
+The study compares three refrigerants at nominal settings and explores
+eleven one-input sweeps for the reference fluid, R1233zd(E). Each fluid
+also has a joint S4 grid.
+The grid combines seven qualities (0.70--1.00, step 0.05) with eleven suction
+superheats ($2,4,5,6,8,10,12,14,16,18,20\,\mathrm{K}$), giving 77 points
+per fluid and 231 total. Each S4 point has a paired S0 reference.
+One-input studies retain all other nominal inputs and do not re-optimise S4.
+All grid points passed the implemented checks; failed or rejected sweep
+points are excluded from performance comparisons.
 
-\subsection{Study Design, Coverage and How to Read the Figures}
-The reusable model preserves the component connections and thermodynamic
-closures of \texttt{Project\_IHX.py}. The experiment script changes inputs,
-builds fresh systems and saves their results before the plotting script
-reads the CSV. The study contains three nominal refrigerant comparisons,
-a joint IHX grid for each refrigerant, and eleven one-parameter sweeps for
-R1233zd(E). The grid uses seven qualities, $0.70$ to $1.00$ in steps of
-$0.05$, and eleven suction-superheat values,
-$\{2,4,5,6,8,10,12,14,16,18,20\}\,\mathrm{K}$.
-There are 77 S4 grid points per fluid, or 231 in total.
-
-Every S4 point is paired with an S0 reference under the same external
-conditions. The exported table contains 610 comparison rows, including
-repeated references; it does not represent 610 independent designs.
-The runner performed 322 distinct solves after reusing repeated input sets.
-There are 606 accepted rows, two solver-failure rows and two physically
-rejected rows. All grid points were accepted by the implemented checks.
-
-In the one-parameter plots the horizontal axis is the changed input; the
-three panels show COP, discharge temperature and total exchanger area.
-Blue is S0 and orange is S4. Except in the joint grid, all other inputs
-stay nominal. Thus the temperature, efficiency and sizing sweeps do not
-re-optimise S4 at each condition. Overlapping blue/orange energy curves
-are expected when both cycles retain the same compressor inlet state.
-In an S4-only sweep the unchanged S0 curve is a reference, not another
-response to the IHX setting; the converse applies to the S0-superheat sweep.
-Blank points mark failed or rejected results. Connecting lines guide the
-eye between calculated points and do not establish a continuous optimum.
-Nearly constant panels use a finite vertical range so that negligible solver
-noise is not magnified into an apparent physical sensitivity.
-
-\begin{table}[htbp]
-\centering\small
-\caption{One-parameter studies for the reference refrigerant. All other inputs
-retain their nominal values. Temperatures listed are water outlet values.}
-\label{tab:ranges}
-\begin{tabularx}{\textwidth}{@{}Y Y@{}}
-\toprule
-Changed input & Sampled values\\
-\midrule
-S4 evaporator quality & 0.70 to 1.00, step 0.05\\
-S4 suction superheat & 2 to 20 K, step 2 K, plus 5 K\\
-Sink outlet temperature & 120 to 145 $^\circ$C, step 5 $^\circ$C\\
-Source outlet temperature & 20 to 40 $^\circ$C, step 5 $^\circ$C\\
-Isentropic efficiency & 0.55 to 0.85, step 0.05\\
-Condenser subcooling & 0 to 15 K, step 2.5 K\\
-S0 evaporator superheat & 2.5, 5, 10, 15, 20 K\\
-Heating duty & 50 to 200 kW, step 25 kW\\
-Common saturation offset & 3, 4, 5, 6, 8, 10 K\\
-Refrigerant film coefficient & 1500 to 4500 W/(m$^2$ K), step 750\\
-Water film coefficient & 1500 to 4500 W/(m$^2$ K), step 750\\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Refrigerant Comparison at Nominal and Selected IHX Settings}
-\label{sec:fluids}
-Figure~\ref{fig:fluids} separates the effect of changing refrigerant from
-that of changing IHX settings. The two nominal bars use $5\,\mathrm{K}$
-compressor-inlet superheat; the selected S4 bars use the best sampled grid
-configuration. The nominal values are summarised in Table~\ref{tab:fluids}.
-\begin{table}[htbp]
+\begin{table}[H]
 \centering\small
 \caption{Nominal refrigerant comparison. COP, shaft power and discharge
 temperature are the same for S0 and S4 at the nominal settings.}
@@ -336,106 +228,62 @@ R600       & 1.514 & 66.03 & 138.85 & 11.79 & 11.613 & 10.378\\
 \end{tabular}
 \end{table}
 
-R1233zd(E) has the highest nominal COP and lowest required shaft power in
-this comparison, but also the highest discharge temperature. R600 has the
-smallest pressure ratio yet the lowest COP: pressure ratio alone cannot
-rank refrigerants because the enthalpy and entropy changes also depend on
-fluid properties. Different refrigerants therefore require their own
-property calculations at the common saturation temperatures.
-The present results provide a thermodynamic and approximate sizing ranking
-under these conditions; environmental impact, flammability, regulatory
-suitability, material compatibility and compressor availability were not
-calculated and cannot be inferred from this ranking.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{refrigerant_comparison.pdf}
- \caption{Nominal S0, nominal S4 and selected S4 per refrigerant. The selected
- S4 improves COP and reduces modelled area while increasing discharge
- temperature. It changes suction superheat as well as IHX configuration.}
- \label{fig:fluids}
-\end{figure}
+R1233zd(E) has the highest nominal COP and lowest shaft input but also the
+highest discharge temperature (Table~\ref{tab:fluids}). R600 has the lowest
+pressure ratio yet the lowest COP: pressure ratio alone cannot rank fluids,
+since enthalpy and entropy changes depend on fluid properties.
+This ranking is thermodynamic and conditional on the prescribed states;
+environmental, safety and equipment suitability are not assessed.
 
-\subsection{Evaporator-Outlet Quality: Internal Recovery Versus COP}
+\clearpage
+\subsection{Quality and Suction Superheat: Different Roles}
 \label{sec:quality}
-This sweep changes only S4 quality from 0.70 to 1.00 at $5\,\mathrm{K}$
-suction superheat. Figure~\ref{fig:quality} shows constant COP (1.754) and
-discharge temperature ($145.05\,{}^\circ\mathrm{C}$), as predicted by
-Eq.~\eqref{eq:cop}. Lower quality means more liquid must evaporate inside
-the IHX. Accordingly, internal duty decreases from $48.24$ to
-$3.19\,\mathrm{kW}$ as quality increases, and IHX area falls from
-$0.403$ to $0.021\,\mathrm{m^2}$. Total S4 area decreases more modestly,
-from $9.772$ to $9.390\,\mathrm{m^2}$.
+At fixed $5\,\mathrm{K}$ suction superheat, increasing S4 quality from
+0.70 to 1.00 leaves COP at 1.754 and discharge temperature at
+$145.05\,{}^\circ\mathrm{C}$. IHX duty nevertheless falls from 48.24 to
+$3.19\,\mathrm{kW}$ and IHX area from 0.403 to $0.021\,\mathrm{m^2}$,
+because less liquid needs vaporisation. Total area falls more modestly,
+from 9.772 to $9.390\,\mathrm{m^2}$, with evaporator area essentially
+constant. Even at quality 1 the IHX remains necessary to superheat the
+saturated vapour. High internal heat recovery therefore does not imply
+high COP, and IHX duty, area and terminal approach are correlated outputs,
+not independent design controls.
 
-The S4 evaporator area stays approximately $3.973\,\mathrm{m^2}$ throughout.
-Its outlet remains at the same saturation temperature, its external duty
-is fixed by the whole-cycle balance, and its inlet is in the same
-saturation region. The endpoint-LMTD representation consequently sees no
-change in the temperature pattern or duty that would change its area.
-The IHX terminal approach rises from $62.55$ to $100.00\,\mathrm{K}$ as
-its duty decreases. These are terminal differences, not a resolved
-minimum inside the exchanger.
-
-At $x_e=1$, there is still an IHX: saturated vapour leaving the evaporator
-must be superheated to the compressor inlet. This endpoint matches S0
-compressor performance, but does not reproduce S0's internal states or
-exchanger areas. Conversely, a large IHX duty at low quality does not
-represent additional source heat or a COP gain. Within these closures,
-quality chiefly allocates internal recovery and exchanger sizing.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{quality.pdf}
- \caption{S4 quality sweep at nominal suction superheat. Flat COP and
- discharge-temperature curves follow from the imposed compressor states;
- the area response arises mainly from the IHX.}
- \label{fig:quality}
-\end{figure}
-
-\subsection{S4 Suction Superheat: Energy Gain and Discharge-Temperature Cost}
 \label{sec:superheat}
-At fixed $x_e=0.90$, increasing suction superheat from 2 to $20\,\mathrm{K}$
-increases COP from 1.733 to 1.858, decreases shaft input from 57.71 to
-$53.82\,\mathrm{kW}$, and raises discharge temperature from 142.28 to
-$159.47\,{}^\circ\mathrm{C}$. Total area falls from 10.029 to
-$8.165\,\mathrm{m^2}$, even though IHX area rises from 0.115 to
-$0.196\,\mathrm{m^2}$ and its duty increases from 16.77 to
-$24.47\,\mathrm{kW}$. The reduction in the external exchanger areas
-outweighs the IHX increase.
-
-Raising suction temperature changes both $h_1$ and $h_2$. For the sampled
-fluid and conditions, the resulting ratio in Eq.~\eqref{eq:cop} increases;
-refrigerant flow adjusts to maintain $100\,\mathrm{kW}$, so total shaft
-input falls despite the hotter compressor discharge. This trend should
-not be interpreted as a universal rule that superheating always reduces
-compression work. It is a result for this refrigerant and these prescribed
-states. At 2 and $4\,\mathrm{K}$ S4 performs slightly below the unchanged
-S0 reference; the curves meet at $5\,\mathrm{K}$, then S4 exceeds it.
-
-Compared with nominal S0, the $20\,\mathrm{K}$ endpoint has a 5.92\% COP
-gain but a $14.42\,\mathrm{K}$ higher discharge temperature. A compressor
-temperature constraint could therefore change the preferred setting.
-No such limit has been supplied or applied in this study.
-\begin{figure}[htbp]
+At quality 0.90, raising suction superheat from 2 to $20\,\mathrm{K}$
+increases COP from 1.733 to 1.858, lowers shaft input from 57.71 to
+$53.82\,\mathrm{kW}$ and raises discharge temperature from 142.28 to
+$159.47\,{}^\circ\mathrm{C}$ (Figure~\ref{fig:superheat}). Total area falls
+from 10.029 to $8.165\,\mathrm{m^2}$ even though IHX area increases from
+0.115 to $0.196\,\mathrm{m^2}$; reductions in external exchangers dominate.
+S4 is slightly below nominal S0 at 2 and 4 K, matches it at 5 K and exceeds
+it thereafter. The falling shaft input is a result for these prescribed
+states and adjusted mass flow, not a universal effect of superheating.
+\begin{figure}[H]
  \centering\includegraphics[width=\textwidth]{superheat.pdf}
- \caption{S4 suction-superheat sweep with quality fixed at 0.90. COP and
- area improve over the sampled range, while discharge temperature increases.}
+ \caption{S4 suction-superheat sweep at quality 0.90; S0 stays nominal.
+ Higher COP accompanies hotter discharge and lower predicted total area.}
  \label{fig:superheat}
 \end{figure}
 
-\subsection{Joint Quality--Superheat Grid and Selection of Sampled Designs}
+\subsection{Joint Grid and Selection of Sampled Designs}
 \label{sec:grid}
-Figures~\ref{fig:grid1}--\ref{fig:grid3} show the S4 grid for each fluid.
-The horizontal axis is quality, the vertical axis is suction superheat,
-and the three colour scales describe COP, discharge temperature and total
-area. Colours indicate calculated values over the sampled grid, not
-probabilities or statistical confidence. COP and discharge temperature
-form almost horizontal bands because they are independent of quality at
-fixed suction superheat. Area changes in both directions.
+The reference-fluid grid (Figure~\ref{fig:grid1}) separates these effects:
+COP and discharge temperature depend on suction superheat, while quality
+also affects area. The selection rule maximises accepted S4 COP, treats
+relative differences below $10^{-7}$ as ties, then minimises total area.
+All three fluids select quality 1 and $20\,\mathrm{K}$ superheat
+(Table~\ref{tab:selected}); quality wins through the area tie-break rather
+than a quality-driven COP increase.
+\clearpage
+\begin{figure}[H]
+ \centering\includegraphics[width=\textwidth]{ihx_grid_1.pdf}
+ \caption{R1233zd(E) joint S4 grid. Quality affects sizing while superheat
+ controls the compressor-state performance.}
+ \label{fig:grid1}
+\end{figure}
 
-The selection rule first maximises COP among accepted S4 points for each
-fluid, treating relative COP differences below $10^{-7}$ as ties, then
-chooses the tied point with smallest total area. All three selected
-configurations lie at $x_e=1.00$ and $\Delta T_{\mathrm{suc}}=20\,\mathrm{K}$
-(Table~\ref{tab:selected}). Quality is selected by the area tie-break,
-not by an independent quality-driven COP improvement.
-\begin{table}[htbp]
+\begin{table}[H]
 \centering\small
 \caption{Best sampled S4 COP per refrigerant; gains use each fluid's own
 nominal S0 reference. All selected points use quality 1 and superheat 20 K.}
@@ -452,343 +300,146 @@ R600 & 1.659 & 9.55 & 60.28 & 150.53 & 8.336 & 36.14\\
 \end{tabular}
 \end{table}
 
-R600 has the largest percentage gain but still a lower absolute COP than
-R1233zd(E). COP gain and power saving are also different percentages:
-for R1233zd(E), a 5.92\% COP gain corresponds to a 5.59\% shaft-power
-reduction at fixed heating duty. Its modelled area is 27.64\% below
-nominal S0. The corresponding power reductions are 8.12\% for R245fa and
-8.71\% for R600. Pressure ratios stay at their nominal values because
-neither grid input changes saturation pressures.
+For R1233zd(E), the selected COP of 1.858 is 5.92\% above nominal S0;
+at fixed heating duty this means 5.59\% less shaft input, not 5.92\%.
+Total predicted area is 27.64\% lower, and total exergy destruction falls
+from 32.95 to $29.84\,\mathrm{kW}$. The cost is a
+$14.42\,\mathrm{K}$ hotter discharge. Its selected IHX transfers only
+$11.31\,\mathrm{kW}$ with $0.084\,\mathrm{m^2}$ area, less than nominal
+S4 despite higher COP. R600 has the largest percentage COP gain but remains
+below R1233zd(E) in absolute COP. Pressure ratios remain nominal because
+neither grid input changes saturation temperatures.
 
-These are boundary selections from a finite search, not demonstrated
-interior optima. In particular, the COP trend is still increasing at
-$20\,\mathrm{K}$. No claim is made about larger superheat or a globally
-optimal plant. The comparison also changes compressor-inlet superheat
-relative to S0; the gain cannot be attributed solely to inserting an IHX
-at otherwise identical compressor inlet conditions. The IHX permits this
-higher suction superheat without requiring the source water alone to
-provide it, an important distinction from the S0-superheat sweep below.
-No temperature, cost, volume or environmental objective is part of the
-selection rule.
+These selections lie on the search boundary, with COP still increasing at
+20 K; they are not demonstrated global optima. The comparison changes
+compressor-inlet superheat relative to nominal S0, so the gain cannot be
+attributed solely to IHX insertion at matched inlet conditions. S4 obtains
+extra suction heat internally, avoiding the source-side superheat limit
+described below. No discharge-temperature, cost or equipment constraint
+enters the selection rule. The selected IHXs have approximately 85 K
+minimum \emph{terminal} approach, which does not validate their full
+internal temperature profiles.
 
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{ihx_grid_1.pdf}
- \caption{R1233zd(E) S4 grid: COP, discharge temperature and total area.
- Quality changes area but does not alter the compressor-state performance.}
- \label{fig:grid1}
-\end{figure}
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{ihx_grid_2.pdf}
- \caption{R245fa S4 grid under the same external conditions and sampled
- settings. Its larger relative COP improvement starts from a lower baseline.}
- \label{fig:grid2}
-\end{figure}
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{ihx_grid_3.pdf}
- \caption{R600 S4 grid. The smallest nominal pressure ratio does not give
- the highest COP, illustrating the role of fluid-dependent properties.}
- \label{fig:grid3}
-\end{figure}
+\clearpage
+\subsection{Other Sensitivities: Energy Performance Versus Sizing}
+\label{sec:sensitivities}
+Table~\ref{tab:sensitivities} condenses the remaining reference-fluid sweeps.
+Sink and source studies shift both water endpoints, preserving the 10 K
+sink rise and 5 K source drop. Condensing and evaporating temperatures
+follow Eq.~\eqref{eq:saturation}. Nominal S0/S4 energy curves coincide in
+these shared-input studies; only the S0-superheat sweep holds S4 fixed.
 
-\subsection{Sink Temperature: Higher Delivery Temperature Raises Shaft Demand}
-The sink outlet is varied from 120 to $145\,{}^\circ\mathrm{C}$ while
-maintaining a $10\,\mathrm{K}$ water rise: the inlet therefore moves from
-110 to $135\,{}^\circ\mathrm{C}$. Source conditions stay nominal, and
-condensation temperature follows the sink outlet from 125 to
-$150\,{}^\circ\mathrm{C}$. This is a shifted delivery-temperature study,
-not an independently varied inlet or an independently imposed refrigerant
-temperature study.
+\begin{table}[H]
+\centering\small
+\caption{Secondary R1233zd(E) sensitivities. Arrows follow increasing input.
+ Areas are S0 totals in m$^2$; S4 shares the energy trends unless stated.
+ Limiting approaches are qualified in Section~\ref{sec:limits}.}
+\label{tab:sensitivities}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{0.26\textwidth} Y Y@{}}
+\toprule
+Input range & Energy/temperature response & Sizing response and interpretation\\
+\midrule
+Sink outlet 120--145 $^\circ$C & COP 2.024 $\to$ 1.388;
+ $T_2$: 135.17 $\to$ 160.44 $^\circ$C &
+ $A_\Sigma$: 12.120 $\to$ 9.049; source heat falls as shaft demand rises.\\
+Source outlet 20--40 $^\circ$C & COP 1.581 $\to$ 1.969;
+ $\dot W$: 63.25 $\to$ 50.80 kW &
+ $A_\Sigma$: 9.951 $\to$ 12.246; more external heat is recovered.\\
+Isentropic efficiency 0.55--0.85 & COP 1.593 $\to$ 1.916;
+ $T_2$: 160.95 $\to$ 135.72 $^\circ$C &
+ $A_\Sigma$: 8.556 $\to$ 15.072; cooler discharge and greater source duty increase area.\\
+Accepted subcooling 2.5--15 K & COP 1.698 $\to$ 1.969;
+ $T_2$ unchanged & $A_\Sigma$: 10.332 $\to$ 38.984;
+ 15 K is a zero-approach limit; 0 K failed numerically.\\
+S0 superheat 2.5--20 K & COP 1.736 at 2.5 K; 1.754 at 5 K;
+ S4 fixed & 10 K reaches a zero-approach limit;
+ 15/20 K rejected.\\
+Heating duty 50--200 kW & COP 1.754 unchanged;
+ $\dot W$: 28.50 $\to$ 114.02 kW &
+ $A_\Sigma$: 5.564 $\to$ 22.256; proportional resizing, not part-load performance.\\
+Common saturation offset 3--10 K & COP 1.847 $\to$ 1.547;
+ $\dot W$: 54.14 $\to$ 64.65 kW &
+ $A_\Sigma$: 16.739 $\to$ 6.099; smaller area costs more shaft input.\\
+Either film coefficient 1500--4500 W/(m$^2$ K), other fixed at 3000 &
+ COP, power, $T_2$ and ratio unchanged &
+ $A_\Sigma$: 16.692 $\to$ 9.273;
+ refrigerant coefficient also changes both IHX sides.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-COP decreases from 2.024 to 1.388 and shaft power rises from 49.40 to
-$72.06\,\mathrm{kW}$ as pressure ratio increases from 13.35 to 21.04. Discharge temperature rises from 135.17 to
-$160.44\,{}^\circ\mathrm{C}$. Higher required delivery temperature thus
-reduces the fraction of heating supplied by source heat and increases
-the fraction supplied by shaft work.
+The area trends require an energy-balance interpretation. Higher sink
+temperature reduces COP but also lowers recovered source heat from 50.60
+to $27.94\,\mathrm{kW}$, reducing evaporator duty. A warmer source instead
+improves COP while raising source recovery from 36.75 to
+$49.20\,\mathrm{kW}$, requiring more area. Higher compressor efficiency
+simultaneously reduces shaft input and discharge temperature: its cooler
+discharge reduces the condenser driving difference, while improved COP
+increases evaporator duty. Thus larger area can accompany better energy
+performance. S4 follows the same qualitative area trends.
 
-S0 total area nevertheless decreases from 12.120 to
-$9.049\,\mathrm{m^2}$, and S4 from 10.182 to $8.035\,\mathrm{m^2}$.
-This decrease does not indicate better thermodynamic performance: source
-heat falls from 50.60 to $27.94\,\mathrm{kW}$, substantially reducing
-evaporator duty and its required area. The thermal states and condenser
-LMTD also change. The coincident COP and discharge curves show that nominal
-S4 does not remove the penalty associated with the increased temperature lift.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{sink_temperature.pdf}
- \caption{Shifted sink-water temperature study with fixed 10 K water rise
- and 100 kW heating duty. Smaller total area accompanies worse COP here.}
- \label{fig:sink}
-\end{figure}
+Capacity and film-coefficient results follow directly from the sizing
+formulation. At fixed states, flow, power, duty, area and absolute exergy
+destruction scale with heating capacity. This does not represent the
+part-load efficiency of a fixed installation. Film coefficients resize
+exchangers without changing prescribed thermodynamic states. Increasing
+either coefficient raises external $U$ from 1000 to
+$1800\,\mathrm{W\,m^{-2}\,K^{-1}}$. Only the refrigerant-coefficient sweep
+also changes IHX area (0.256 to $0.085\,\mathrm{m^2}$); changing the water
+coefficient leaves it at $0.128\,\mathrm{m^2}$.
 
-\subsection{Source Temperature: Better Heat Availability Can Require More Area}
-The source outlet varies from 20 to $40\,{}^\circ\mathrm{C}$, with its
-inlet always $5\,\mathrm{K}$ warmer. Evaporation temperature therefore
-varies from 15 to $35\,{}^\circ\mathrm{C}$ at fixed condensation conditions.
-COP rises from 1.581 to 1.969, shaft power falls from 63.25 to
-$50.80\,\mathrm{kW}$, and pressure ratio falls from 23.34 to 11.42.
-Discharge temperature changes more modestly, from 147.02 to
-$143.64\,{}^\circ\mathrm{C}$. A warmer source reduces the pressure and
-temperature lift required for the same useful delivery conditions.
-
-Recovered source heat increases from 36.75 to $49.20\,\mathrm{kW}$.
-Consequently, S0 area increases from 9.951 to $12.246\,\mathrm{m^2}$ and
-S4 area from 8.563 to $10.375\,\mathrm{m^2}$. Greater source recovery can
-require more exchanger area even when COP improves; this is the opposite
-area trend from the sink-temperature study, with a consistent first-law
-explanation. Nominal S0 and S4 again coincide in energy performance.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{source_temperature.pdf}
- \caption{Shifted source-water temperature study with fixed 5 K water drop.
- Higher source temperature improves COP while the recovered external duty
- and required exchanger area increase.}
- \label{fig:source}
-\end{figure}
-
-\subsection{Compressor Efficiency: Reduced Irreversibility Versus Sizing}
-Increasing $\eta_{\mathrm{is}}$ from 0.55 to 0.85 raises COP from 1.593 to
-1.916, lowers shaft power from 62.79 to $52.20\,\mathrm{kW}$, and lowers
-discharge temperature from 160.95 to $135.72\,{}^\circ\mathrm{C}$.
-Pressure ratio stays 16.10 because the saturation temperatures are unchanged.
-Equation~\eqref{eq:compressor} explains the reduction in specific enthalpy
-rise at higher efficiency. The refrigerant flow then increases to meet
-the same condenser duty.
-
-Total S0 area increases from 8.556 to $15.072\,\mathrm{m^2}$; total S4
-area increases from 7.145 to $13.259\,\mathrm{m^2}$.
-The cooler discharge reduces the condenser's hot-end temperature difference,
-while the higher COP increases external evaporator duty. Both effects can
-increase required area. In particular, a less efficient compressor can
-appear to need a smaller condenser because its discharge is hotter; this
-is not an energy advantage. Total exergy destruction falls from 38.59
-to $28.26\,\mathrm{kW}$ for both nominal cycles, consistent with their
-improved energy performance under common external conditions.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{efficiency.pdf}
- \caption{Isentropic-efficiency sweep. COP and discharge temperature improve
- together, while the single-zone sizing model predicts larger exchangers.}
- \label{fig:efficiency}
-\end{figure}
-
-\subsection{Condenser Subcooling: A COP Benefit Near a Temperature Limit}
-Increasing accepted subcooling from 2.5 to $15\,\mathrm{K}$ raises COP
-from 1.698 to 1.969 and lowers shaft power from 58.91 to
-$50.79\,\mathrm{kW}$. Discharge temperature stays
-$145.05\,{}^\circ\mathrm{C}$ because the compressor inlet, pressures and
-efficiency are unchanged. Lower $h_3$ increases the condenser enthalpy
-drop per unit refrigerant mass; less mass is needed for the same duty.
-The zero-subcooling case failed for both cycles with a singular-Jacobian
-message. It is a numerical failure, not evidence that zero subcooling is
-thermodynamically impossible.
-
-The area penalty becomes severe near the other endpoint. S0 total area
-rises from 10.332 to $38.984\,\mathrm{m^2}$ and S4 from 8.779 to
-$37.099\,\mathrm{m^2}$. At 12.5 K the condenser's cold-end approach is
-already only $2.5\,\mathrm{K}$; at 15 K its liquid outlet reaches the
-$120\,{}^\circ\mathrm{C}$ incoming sink-water temperature. The recorded
-approach is only about $5.1\times10^{-8}\,\mathrm{K}$, positive because
-of numerical tolerance.
-
-\textbf{The 15 K endpoint must be read as a limiting, non-practical sizing
-case despite its accepted status.} Caldis floors terminal differences at
-$0.01\,\mathrm{K}$ in its LMTD calculation to keep the solver finite.
-For an unregularised exchanger with the other terminal difference finite,
-area diverges as this approach tends to zero. The plotted finite area
-therefore does not establish a feasible finite-area design at the endpoint.
-A robust condenser design at these nominal conditions requires a strictly
-positive practical margin below the 15 K subcooling limit.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{subcooling.pdf}
- \caption{Condenser-subcooling sweep. The 0 K cases failed numerically.
- The sharp area increase near 15 K reflects a vanishing terminal approach;
- its finite endpoint area is affected by LMTD regularisation.}
- \label{fig:subcooling}
-\end{figure}
-
-\subsection{Baseline Evaporator Superheat: Source-Side Feasibility}
-Only S0 superheat changes in this sweep; S4 remains at nominal quality and
-$5\,\mathrm{K}$ suction superheat. From 2.5 to $5\,\mathrm{K}$, S0 COP
-rises from 1.736 to 1.754 and discharge temperature from 142.74 to
-$145.05\,{}^\circ\mathrm{C}$. At $10\,\mathrm{K}$, the raw accepted
-result is COP 1.789 and total area $41.274\,\mathrm{m^2}$, compared with
-$11.128\,\mathrm{m^2}$ at 5 K. Almost all of this increase is evaporator
-area, which rises from 5.732 to $36.622\,\mathrm{m^2}$.
-
-The source inlet is $35\,{}^\circ\mathrm{C}$ and evaporation is at
-$25\,{}^\circ\mathrm{C}$. At 10 K superheat the refrigerant outlet
-therefore reaches the source-inlet temperature. Its recorded terminal
-approach is approximately $7.4\times10^{-10}\,\mathrm{K}$.
-\textbf{This is another regularised zero-approach boundary, not a practical
-finite-area evaporator.} At 15 and 20 K the refrigerant would leave at
-40 and $45\,{}^\circ\mathrm{C}$, hotter than the $35\,{}^\circ\mathrm{C}$
-source inlet; the results are physically rejected and omitted from the
-performance curves.
-
-S4 avoids this particular source-side superheat limit by taking the extra
-heat from the high-pressure refrigerant in the IHX. This explains why
-20 K suction superheat can be accepted in the S4 grid while 20 K
-\emph{evaporator} superheat is rejected for S0. It does not remove the need
-to check compressor discharge temperature and the full internal IHX
-profiles in a more detailed design.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{baseline_superheat.pdf}
- \caption{S0 evaporator-superheat sweep with S4 fixed. The 10 K S0 point
- has essentially zero terminal approach; the 15 and 20 K points violate
- the source-side terminal-temperature condition and are rejected.}
- \label{fig:baseline-superheat}
-\end{figure}
-
-\subsection{Heating Capacity: A Scaling Study, Not Part-Load Performance}
-At fixed temperatures and efficiencies, changing heating duty from 50 to
-$200\,\mathrm{kW}$ leaves COP at 1.754, discharge temperature at
-$145.05\,{}^\circ\mathrm{C}$ and pressure ratio at 16.10 for both cycles.
-Shaft input scales from 28.50 to $114.02\,\mathrm{kW}$ and refrigerant
-flow from 0.393 to $1.573\,\mathrm{kg/s}$. S0 total area scales from
-5.564 to $22.256\,\mathrm{m^2}$ and S4 from 4.748 to
-$18.994\,\mathrm{m^2}$. Absolute exergy destruction also scales, from
-16.47 to $65.90\,\mathrm{kW}$.
-
-The states and specific enthalpy differences do not change, so all flow
-rates and duties scale with capacity. With fixed film coefficients and
-temperature differences, Eq.~\eqref{eq:sizing} makes area proportional
-to duty. The constant COP is therefore expected. It does not show that a
-real 100 kW machine keeps its efficiency between 50 and 200 kW: no fixed
-hardware, speed control, flow-dependent coefficients or part-load map is
-represented.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{capacity.pdf}
- \caption{Heating-capacity scaling with exchangers resized at every point.
- Constant intensive states and COP coexist with proportional power, flow
- and area changes.}
- \label{fig:capacity}
-\end{figure}
-
-\subsection{Saturation Offset: The Clearest Energy--Area Trade-Off}
-The common offset is changed from 3 to $10\,\mathrm{K}$ on both external
-exchangers simultaneously. At 3 K, condensation/evaporation temperatures
-are 133/27 $^\circ$C; at 10 K they are 140/20 $^\circ$C.
-The saturation-temperature lift therefore increases from 106 to 120 K.
-This is not an independent condenser-pinch or evaporator-pinch experiment.
-
-COP falls from 1.847 to 1.547, power rises from 54.14 to
-$64.65\,\mathrm{kW}$ and discharge temperature rises from 142.73 to
-$150.96\,{}^\circ\mathrm{C}$. Pressure ratio increases from 14.46 to
-21.15. In return, larger driving differences reduce S0 total area from
-16.739 to $6.099\,\mathrm{m^2}$ and S4 from 12.676 to
-$5.775\,\mathrm{m^2}$. This is a direct energy-versus-sizing trade-off:
-smaller saturation offsets improve COP but need greater thermal conductance.
-No economic optimum follows without equipment cost, energy price and
-operating hours. Since the offset is not the true local pinch, detailed
-profiles would still be needed before choosing an exchanger approach.
-\begin{figure}[htbp]
+\clearpage
+The common saturation offset gives the clearest direct energy--area
+trade-off (Figure~\ref{fig:pinch}). From 3 to 10 K, condensing/evaporating
+temperatures change from 133/27 to 140/20 $^\circ$C, pressure ratio rises
+from 14.46 to 21.15 and discharge temperature from 142.73 to
+$150.96\,{}^\circ\mathrm{C}$. S4 total area falls from 12.676 to
+$5.775\,\mathrm{m^2}$ as COP falls. Smaller offsets therefore improve
+energy performance at greater conductance requirements. No economic
+optimum follows without equipment costs, energy prices and operating hours.
+\begin{figure}[H]
  \centering\includegraphics[width=\textwidth]{pinch.pdf}
- \caption{Simultaneous condenser/evaporator saturation-offset sweep.
- Larger offsets reduce modelled exchanger area at the cost of greater
- pressure lift, shaft demand and discharge temperature.}
+ \caption{Common saturation-offset sweep. Larger driving differences reduce
+ exchanger area while increasing pressure lift, shaft input and discharge temperature.}
  \label{fig:pinch}
 \end{figure}
 
-\subsection{Film Coefficients: Sizing Sensitivity Without a COP Response}
-The refrigerant and water coefficients are each varied separately from
-1500 to $4500\,\mathrm{W\,m^{-2}\,K^{-1}}$, keeping the other at 3000.
-Neither sweep changes COP, shaft work, discharge temperature or pressure
-ratio: in this design-sizing formulation, coefficients determine area
-rather than feeding back into the prescribed thermodynamic states.
-For the external exchangers, either sweep increases overall conductance
-per unit area from $U=1000$ to $1800\,\mathrm{W\,m^{-2}\,K^{-1}}$.
-The S0 area response is consequently identical for the two coefficients,
-falling from 16.692 to $9.273\,\mathrm{m^2}$.
+\subsection{Numerical Reliability and Model Limits}
+\label{sec:limits}
+Across accepted rows, maximum relative energy and exergy residuals are
+$1.54\times10^{-8}$ and $1.45\times10^{-10}$. Regression checks compare
+S0 against independent CoolProp states and S4 against the original script.
+These support numerical conservation, not validation of exchanger physics.
 
-For S4, increasing the refrigerant coefficient reduces total area from
-14.309 to $7.893\,\mathrm{m^2}$, while increasing the water coefficient
-reduces it from 14.181 to $7.935\,\mathrm{m^2}$.
-The small difference is explained by the IHX: both of its sides use the
-refrigerant coefficient. Its area falls from 0.256 to
-$0.085\,\mathrm{m^2}$ in the refrigerant-coefficient sweep, whereas it
-stays at $0.128\,\mathrm{m^2}$ when only the water coefficient changes.
-The curves therefore confirm the thermal-resistance structure of the
-model; they are not evidence of a COP improvement from better film transfer.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{refrigerant_coefficient.pdf}
- \caption{Refrigerant film-coefficient sweep. Both external exchangers and
- both IHX sides respond in area; imposed cycle states and COP stay fixed.}
- \label{fig:refrigerant-coefficient}
-\end{figure}
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{water_coefficient.pdf}
- \caption{Water film-coefficient sweep. Only the external exchangers resize;
- the refrigerant--refrigerant IHX does not use this coefficient.}
- \label{fig:water-coefficient}
-\end{figure}
+Two numerically accepted endpoints need explicit qualification. At 15 K
+subcooling the condenser liquid outlet reaches incoming sink water at
+$120\,{}^\circ\mathrm{C}$; at 10 K S0 superheat the evaporator outlet
+reaches incoming source water at $35\,{}^\circ\mathrm{C}$.
+Both terminal approaches are effectively zero. Their finite reported areas
+result from Caldis's $0.01\,\mathrm{K}$ LMTD floor: without regularisation,
+area diverges as one approach tends to zero with the other finite.
+They are limiting cases, not practical finite-area designs. Zero-subcooling
+cases failed numerically, which does not establish thermodynamic
+impossibility; S0 superheats of 15/20 K violate the source-side terminal
+temperature condition and are physically rejected.
 
-\subsection{IHX Duty, Area and Terminal Approach as Joint Outputs}
-Figure~\ref{fig:ihx-sizing} replots the joint-grid results as COP against
-IHX duty, IHX area and the smaller terminal temperature difference. Each
-point corresponds to one calculated quality--superheat combination and one
-refrigerant. These quantities are correlated outputs of the imposed states,
-not three independently varied control parameters.
-
-The quality sweep already shows why high internal duty is not synonymous
-with high COP: duty can change greatly while COP stays fixed. Likewise,
-a larger IHX area may reflect more residual liquid to evaporate or a
-smaller driving difference, rather than a better energy design. At nominal
-R1233zd(E) quality/superheat the IHX duty is $18.21\,\mathrm{kW}$ and its
-area is $0.128\,\mathrm{m^2}$. At the selected quality-1, 20 K point,
-duty is only $11.31\,\mathrm{kW}$ and area $0.084\,\mathrm{m^2}$,
-despite the higher COP. Finishing less vaporisation offsets the greater
-suction superheat.
-
-For the selected points the minimum terminal approach is about 85 K for
-all three fluids, so a terminal-temperature check is not restrictive there.
-However, no discretised temperature profile or independently calculated
-IHX effectiveness was exported. These scatter plots do not establish a
-minimum approach everywhere inside a phase-changing IHX, and cannot be
-used to claim effectiveness-based optimisation.
-\begin{figure}[htbp]
- \centering\includegraphics[width=\textwidth]{ihx_sizing.pdf}
- \caption{COP versus IHX duty, area and minimum terminal approach for the
- joint grids. Multiple inputs vary across each point cloud; apparent
- correlations should not be interpreted as isolated causal sensitivities.}
- \label{fig:ihx-sizing}
-\end{figure}
-
-\subsection{Numerical Reliability and Limits of the Current Analysis}
-Energy/heating-duty/exergy balance residuals are checked relative to the
-imposed heating duty with tolerance $10^{-4}$; component mass-flow
-mismatches must be below $10^{-7}\,\mathrm{kg/s}$. Among accepted rows,
-the largest whole-cycle relative energy residual is
-$1.54\times10^{-8}$, the largest relative heating-duty error is
-$2.81\times10^{-9}$, the largest relative exergy-balance residual is
-$1.45\times10^{-10}$, and the largest component mass mismatch is
-$3.66\times10^{-11}\,\mathrm{kg/s}$. These checks support numerical
-conservation. Regression checks also compare S0 with an independent
-CoolProp state calculation and S4 with the original script.
-
-Conservation does not validate the physical adequacy of a single-zone
-exchanger model. In particular, the 15 K subcooling and 10 K S0-superheat
-points expose the difference between a very small positive numerical
-approach and a useful engineering temperature margin. They remain in the
-saved plots because they passed the original checks, but are explicitly
-qualified here. The two zero-subcooling failures cannot be replaced with
-invented results; the two negative-approach S0-superheat cases cannot be
-ranked as feasible designs merely because raw performance metrics exist.
-
-The present evidence supports a comparison of prescribed steady-state
-cycles and sampled design sensitivities. It does not yet establish a
-selected industrial refrigerant or a final IHX design. Before final design
-recommendations, the analysis would need phase-resolved exchanger
-profiles, practical approach and discharge-temperature limits, and any
-required equipment, environmental and economic criteria. These are
-outstanding modelling decisions for later work, rather than assumed
-results of the current experiments.
+S4 can supply higher suction superheat internally, but practical design
+still requires positive approach margins throughout phase-resolved
+exchangers and an equipment discharge-temperature limit. No compressor
+map, volumetric efficiency, cost model or environmental/safety screening
+is included. The results support prescribed-cycle comparisons and sampled
+sensitivities, rather than a final industrial refrigerant or IHX selection.
 
 \section{Discussion and Engineering Implications}
-% [Discuss practical limits (compressor discharge temperature lubricant limit), assumptions (single-zone IHX), and thermodynamic trade-offs]
+% To be completed.
 
 \section{Conclusion}
-% [Main findings and recommendations]
+% To be completed.
 
 \begin{thebibliography}{9}
 \bibitem{assignment}
-Course project specification, \emph{Mini-project --- High-temperature heat pump cycles: Design and comparison of advanced cycles}, 2026.
+Course project specification, \emph{Mini-project --- High-temperature heat
+pump cycles: Design and comparison of advanced cycles}, 2026.
 \end{thebibliography}
-
 \end{document}
